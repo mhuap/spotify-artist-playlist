@@ -1,4 +1,4 @@
-#Artist Playlist Maker
+# Artist Playlist Maker
 
 Make playlist of entire artist's discography
 
