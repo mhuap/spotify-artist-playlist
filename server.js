@@ -21,7 +21,7 @@ if (process.env.NODE_ENV !== 'production') {
 var client_id = process.env.CLIENT_ID; // Your client id
 var client_secret = process.env.CLIENT_SECRET; // Your secret
 // var redirect_uri = 'http://localhost:5000/callback/';
-var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback'
+var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback/'
 var stateKey = 'spotify_auth_state';
 
 const scopes = ['user-read-private', 'user-read-email']
