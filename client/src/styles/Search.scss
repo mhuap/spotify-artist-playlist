@@ -1,0 +1,43 @@
+@use 'variables' as *;
+
+#search {
+
+  header {
+    color: $color-green;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    label {
+      color: $color-text-grey;
+    }
+
+    input {
+      background: $color-card-light;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      padding: 8px;
+      color: white;
+      margin-top: 8px;
+
+      &:focus {
+        background: white;
+        color: black;
+        outline: none;
+      }
+    }
+  }
+
+  button {
+    display: none;
+  }
+
+  li {
+    padding: 4px 0;
+  }
+
+
+}

@@ -1,0 +1,36 @@
+@use 'variables' as *;
+
+#login {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  a.button {
+    margin-top: 200px;
+  }
+}
+
+#login-image {
+  height: 50%;
+  width: 100%;
+  background: linear-gradient(
+            rgba(0, 0, 0, 0),
+            $color-background-black
+          ), url('../images/record-bw.jpeg');
+  background-size: cover;
+  background-position: bottom;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+#login-title {
+  width: 100%;
+
+  p {
+    margin-top: -8px;
+    color: $color-green;
+  }
+
+}

@@ -1,0 +1,25 @@
+@use 'variables' as *;
+
+
+#album {
+
+  label {
+    display: flex;
+    height: 46px;
+    align-items: center;
+    background: $color-card;
+    margin: 16px 0;
+    border-radius: 4px;
+    padding: 16px;
+  }
+
+  input {
+    margin-right: 16px;
+  }
+}
+
+#confirmation {
+  a.button {
+    margin-top: 200px;
+  }
+}

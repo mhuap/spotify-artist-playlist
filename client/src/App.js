@@ -1,77 +1,63 @@
 import React, { useState, useEffect } from 'react';
-
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import Cookies from 'js-cookie';
-import './App.css';
+import Search from './components/search';
+import Artist from './components/artist';
+import Login from './components/login';
 
 let proxy = ''
 if (process.env.NODE_ENV !== 'production') {
   proxy = 'http://localhost:5000'
 }
 
-/**
- * Obtains parameters from the hash of the URL
- * @return Object
- */
-function getHashParams() {
-  var hashParams = {};
-  var e, r = /([^&;=]+)=?([^&;]*)/g,
-      q = window.location.hash.substring(1);
-  while ( e = r.exec(q)) {
-     hashParams[e[1]] = decodeURIComponent(e[2]);
-  }
-  return hashParams;
-}
-
 function App() {
   const [loggedIn, setLoggedIn] = useState(false); // access_token cookie
   const [username, setUsername] = useState('');
 
+  // check if logged in
   useEffect(() => {
     const cookieValue = Cookies.get("access_token")
 
     if (cookieValue) {
       console.log('access_token in cookie')
-      setLoggedIn(true)
+      console.log(username)
       if (!username){
         fetch('/api/me')
           .then(data => data.json())
           .then(data => {
             setUsername(data.display_name);
+            setLoggedIn(true);
           });
       }
-      return;
+    } else {
+      setLoggedIn(false);
     }
 
-    const params = getHashParams();
-    if (params.error) {
-      alert('There was an error during the authentication');
-    } else if (params.access_token) {
-      console.log('access_token in url');
-      setLoggedIn(true)
-      fetch('/api/me')
-        .then(data => data.json())
-        .then(data => {
-          setUsername(data.display_name);
-        });
-      Cookies.set("access_token", params.access_token);
-      return;
-    }
+  }, [username]);
 
-    setLoggedIn(false);
+  useEffect(()=>console.log(`loggedIn: ${loggedIn}`), [loggedIn])
 
-  }, []);
-
-  let content;
-  if (loggedIn) {
-    content = <h1>Welcome {username}!</h1>
-  } else {
-    content = <a href={`${proxy}/login`}>Login with Spotify</a>
-  }
+  const search = <Search username={username} proxy={proxy}/>;
+  const login = <Login proxy={proxy}/>
 
   return (
-    <div>
-      {content}
+    <div id='container'>
+      <Router>
+        <Switch>
+          <Route exact path="/"
+            render={() => loggedIn ? search : login}
+          />
+          <Route path="/artist/:id"
+            render={() => loggedIn ? <Artist proxy={proxy}/> : <Redirect to='/'/>}
+          />
+
+        </Switch>
+      </Router>
     </div>
   );
 }
