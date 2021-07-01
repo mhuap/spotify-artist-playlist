@@ -154,14 +154,23 @@ app.post('/api/create', (req,res) => {
   const albums = req.body.albums; // ['5U4W9E5WsYb2jUQWePT8Xm', '3KyVcddATClQKIdtaap4bV']
   console.log(albums)
   let playlist_id;
+  let uris;
 
   spotifyApi
     .createPlaylist(artist + ' Discography')
     .then(data => playlist_id = data.body.id)
     .then(id => spotifyApi.getAlbums(albums))
     .then(data => data.body.albums.map(a => a.tracks.items).flat())
-    .then(tracks => tracks.map(t => t.uri))
-    .then(uris => spotifyApi.addTracksToPlaylist(playlist_id, uris))
+    .then(tracks => uris = tracks.map(t => t.uri))
+    .then(data => {
+      while (uris.length > 0) {
+        const batch = uris.splice(0, 100);
+        spotifyApi.addTracksToPlaylist(playlist_id, batch);
+      }
+    })
+
+
+
 })
 
 app.listen(process.env.PORT || port, () => {
