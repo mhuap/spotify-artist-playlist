@@ -15,17 +15,15 @@
     }
 
     input {
-      background: $color-card-light;
+      background: white;
       border: none;
       border-radius: 4px;
       font-size: 16px;
-      padding: 8px;
-      color: white;
+      padding: 16px;
+      color: black;
       margin-top: 8px;
 
       &:focus {
-        background: white;
-        color: black;
         outline: none;
       }
     }
@@ -35,9 +33,26 @@
     display: none;
   }
 
-  li {
-    padding: 4px 0;
+  ul {
+    list-style: none;
+    padding-left: 0;
   }
+
+  li {
+    a {
+      display: flex;
+      padding: 16px;
+      background: $color-card;
+      margin: 16px 0;
+      border-radius: 4px;
+
+      &:hover {
+        background: $color-card-light;
+      }
+    }
+  }
+
+
 
 
 }

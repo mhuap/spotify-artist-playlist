@@ -1,6 +1,11 @@
 @use 'variables' as *;
 
 
+#artist {
+  button {
+    margin-bottom: 16px;
+  }
+}
 #album {
 
   label {
