@@ -73,7 +73,7 @@ app.get('/callback', async function(req, res) {
       spotifyApi.setRefreshToken(refresh_token);
 
       res.cookie('access_token', access_token, {maxAge: 3600000});
-      res.redirect(proxy);
+      res.redirect(proxy+'/');
     })
 });
 
@@ -90,7 +90,7 @@ app.get('/api/me', (req, res) => {
       const refresh = spotifyApi.getRefreshToken()
       if (refresh === undefined) {
         res.clearCookie('access_token');
-        res.redirect(proxy);
+        res.redirect(proxy+'/');
       } else {
         spotifyApi.refreshAccessToken()
           .then(data => spotifyApi.setAccessToken(data.body['access_token']))
