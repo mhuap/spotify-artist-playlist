@@ -26,7 +26,7 @@ function Search({ username, proxy }) {
 
   let list = null;
   if (artists.length > 0) {
-    list = artists.map(a => <li key={a.name}><Link to={'/artist/' + a.id}>{a.name}</Link></li>)
+    list = artists.map(a => <li key={a.name}><Link to={'/artist/' + a.id}><img src={a.image}/>{a.name}</Link></li>)
   }
   return (
     <div id='search'>

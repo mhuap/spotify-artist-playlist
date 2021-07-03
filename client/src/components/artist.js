@@ -73,6 +73,7 @@ function Artist({ proxy }) {
     list = albums.map(a =>
       <Album key={a.id}
         name={a.name}
+        image={a.image}
         albumId={a.id}
         isSelected={isAlbumSelected(a.id)}
         onClickAlbum={onClickAlbum}

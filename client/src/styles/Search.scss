@@ -41,7 +41,8 @@
   li {
     a {
       display: flex;
-      padding: 16px;
+      align-items: center;
+      padding: 8px;
       background: $color-card;
       margin: 16px 0;
       border-radius: 4px;
@@ -49,6 +50,13 @@
       &:hover {
         background: $color-card-light;
       }
+    }
+
+    img {
+      height: 80px;
+      width: 80px;
+      margin-right: 16px;
+      border-radius: 4px;
     }
   }
 

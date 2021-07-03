@@ -109,7 +109,8 @@ app.get('/api/search-artist', (req, res) => {
       const items = data.body.artists.items.map(x => {
         return {
           name: x.name,
-          id: x.id
+          id: x.id,
+          image: x.images[1].url
         };
       })
 
@@ -130,7 +131,8 @@ app.get('/api/albums', (req, res) => {
       const items = data.body.items.map(x => {
         return {
           name: x.name,
-          id: x.id
+          id: x.id,
+          image: x.images[1].url
         };
       })
 
@@ -168,9 +170,6 @@ app.post('/api/create', (req,res) => {
         spotifyApi.addTracksToPlaylist(playlist_id, batch);
       }
     })
-
-
-
 })
 
 app.listen(process.env.PORT || port, () => {
