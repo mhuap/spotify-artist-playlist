@@ -110,7 +110,7 @@ app.get('/api/search-artist', (req, res) => {
         return {
           name: x.name,
           id: x.id,
-          image: x.images[1].url
+          image: x.images.slice(-1)[0].url
         };
       })
 
@@ -132,7 +132,7 @@ app.get('/api/albums', (req, res) => {
         return {
           name: x.name,
           id: x.id,
-          image: x.images[1].url
+          image: x.images.slice(-1)[0].url
         };
       })
 
