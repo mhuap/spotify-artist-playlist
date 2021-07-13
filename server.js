@@ -22,8 +22,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 var client_id = process.env.CLIENT_ID; // Your client id
 var client_secret = process.env.CLIENT_SECRET; // Your secret
-// var redirect_uri = 'http://localhost:5000/callback/';
-var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback/'
+var redirect_uri = 'http://localhost:5000/callback/';
+// var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback/'
 
 const scopes = ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private']
 
@@ -110,7 +110,7 @@ app.get('/api/search-artist', (req, res) => {
         return {
           name: x.name,
           id: x.id,
-          image: x.images.slice(-1)[0].url
+          image: x.images.length === 0 ? '' : x.images.slice(-1)[0].url
         };
       })
 
