@@ -3,7 +3,8 @@
 
 #artist {
   button {
-    margin-bottom: 16px;
+    margin-bottom: 32px;
+    cursor: pointer;
   }
 }
 #album {
@@ -16,6 +17,11 @@
     margin: 16px 0;
     border-radius: 4px;
     padding: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background: $color-card-light;
+    }
   }
 
   span {
