@@ -34,16 +34,15 @@ app.use(bodyParser.urlencoded({ extended:true }));
 app.use(cookieParser());
 app.use(express.static(__dirname + static));
 
-const spotifyApi = new SpotifyWebApi({
-  redirectUri: redirect_uri,
-  clientId: client_id,
-  clientSecret: client_secret
-});
-
 
 app.get('/login', function(req, res) {
 
   console.log('GET/login')
+  const spotifyApi = new SpotifyWebApi({
+    redirectUri: redirect_uri,
+    clientId: client_id,
+    clientSecret: client_secret
+  });
   res.redirect(spotifyApi.createAuthorizeURL(scopes));
 });
 
@@ -61,6 +60,11 @@ app.get('/callback', async function(req, res) {
     return;
   }
 
+  const spotifyApi = new SpotifyWebApi({
+    redirectUri: redirect_uri,
+    clientId: client_id,
+    clientSecret: client_secret
+  });
   spotifyApi
     .authorizationCodeGrant(code)
     .then(data => {
@@ -69,8 +73,8 @@ app.get('/callback', async function(req, res) {
       console.log('Retrieved access token', access_token);
       console.log('The token expires in ' + data.body['expires_in']);
       // Set the access token
-      spotifyApi.setAccessToken(data.body['access_token']);
-      spotifyApi.setRefreshToken(refresh_token);
+      // spotifyApi.setAccessToken(data.body['access_token']);
+      // spotifyApi.setRefreshToken(refresh_token);
 
       res.cookie('access_token', access_token, {maxAge: 3600000});
       res.redirect(proxy+'/');
@@ -80,6 +84,9 @@ app.get('/callback', async function(req, res) {
 app.get('/api/me', (req, res) => {
   console.log('GET /api/me');
 
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["access_token"]
+  });
   spotifyApi
     .getMe()
     .then(data => {
@@ -87,14 +94,7 @@ app.get('/api/me', (req, res) => {
       res.json(me);
     })
     .catch(err => {
-      const refresh = spotifyApi.getRefreshToken()
-      if (refresh === undefined) {
-        res.clearCookie('access_token');
-        res.redirect(proxy+'/');
-      } else {
-        spotifyApi.refreshAccessToken()
-          .then(data => spotifyApi.setAccessToken(data.body['access_token']))
-      }
+      console.log(err)
     })
 })
 
@@ -102,6 +102,12 @@ app.get('/api/search-artist', (req, res) => {
   console.log('GET /api/search-artist');
 
   const artist = req.query.artist;
+
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["access_token"]
+  });
+
+  console.log(req.cookies)
 
   spotifyApi
     .searchArtists(artist)
@@ -125,6 +131,10 @@ app.get('/api/albums', (req, res) => {
   const artist_id = req.query.artist_id;
   let filtered = [];
   // .then(data => res.json(data.body))
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["access_token"]
+  });
+
   spotifyApi
     .getArtistAlbums(artist_id, {include_groups: 'album,compilation', limit: 50, market: 'CA', })
     .then(data => {
@@ -157,6 +167,10 @@ app.post('/api/create', (req,res) => {
   console.log(albums)
   let playlist_id;
   let uris;
+
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["access_token"]
+  });
 
   spotifyApi
     .createPlaylist(artist + ' Discography')

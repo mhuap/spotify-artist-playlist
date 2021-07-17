@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Link
 } from "react-router-dom";
+import Cookies from 'js-cookie';
 import '../styles/Search.scss';
 
 const querystring = require('querystring');
@@ -12,8 +13,11 @@ function Search({ username, proxy }) {
 
   const searchArtist = (e) => {
     e.preventDefault();
+    const cookieValue = Cookies.get("access_token");
+    console.log(cookieValue)
 
-    fetch(proxy + '/api/search-artist/?' + querystring.stringify({artist: artistInput}))
+    fetch(proxy + '/api/search-artist/?' + querystring.stringify({artist: artistInput}),
+    {credentials: 'include'})
       .then(data => data.json())
       .then(data => {
         console.log(data)
