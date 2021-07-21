@@ -2,14 +2,6 @@ import React from 'react';
 
 import '../styles/Artist.scss';
 function Album({ name, albumId, isSelected, onClickAlbum, image }) {
-  // useEffect(() => {
-  //   fetch(proxy + '/api/albums/?' + querystring.stringify({artist_id: id}))
-  //     .then(data => data.json())
-  //     .then(data => {
-  //       setName(data.name);
-  //       setAlbums(data.albums);
-  //     });
-  // }, [])
 
   return(<div id='album'>
     <label>
@@ -17,7 +9,7 @@ function Album({ name, albumId, isSelected, onClickAlbum, image }) {
         <input type='checkbox' checked={isSelected} value={albumId} onChange={onClickAlbum}/>
         {name}
       </span>
-      <img src={image}/>
+      <img src={image} alt={'Album cover of ' + name}/>
     </label>
   </div>)
 }
