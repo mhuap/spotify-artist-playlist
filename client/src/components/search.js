@@ -17,7 +17,10 @@ function Search({ username, proxy }) {
     console.log(cookieValue)
 
     fetch(proxy + '/api/search-artist/?' + querystring.stringify({artist: artistInput}),
-    {credentials: 'include'})
+      {
+        headers: {"Authorization": `Bearer ${cookieValue}`}
+      }
+    )
       .then(data => data.json())
       .then(data => {
         console.log(data)

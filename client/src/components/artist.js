@@ -3,6 +3,7 @@ import {
   Link,
   useParams
 } from "react-router-dom";
+import Cookies from 'js-cookie';
 import Album from './album'
 
 const querystring = require('querystring');
@@ -18,7 +19,13 @@ function Artist({ proxy }) {
 
 
   useEffect(() => {
-    fetch(proxy + '/api/albums/?' + querystring.stringify({artist_id: id}))
+    const cookieValue = Cookies.get("access_token");
+
+    fetch(proxy + '/api/albums/?' + querystring.stringify({artist_id: id}),
+      {
+        headers: {"Authorization": `Bearer ${cookieValue}`}
+      }
+    )
       .then(data => data.json())
       .then(data => {
         setName(data.name);
@@ -55,10 +62,13 @@ function Artist({ proxy }) {
   }
 
   const createPlaylist = () => {
+    const cookieValue = Cookies.get("access_token");
+
     fetch(proxy + '/api/create/', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${cookieValue}`
       },
       body: JSON.stringify({
         artist: name,
@@ -68,7 +78,7 @@ function Artist({ proxy }) {
     setPlaylistCreated(true);
   }
 
-  let list = <p>No albums</p>
+  let list = <p>Loading...</p>
   if (albums.length > 0) {
     list = albums.map(a =>
       <Album key={a.id}

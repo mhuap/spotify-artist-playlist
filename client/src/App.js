@@ -24,10 +24,12 @@ function App() {
     const cookieValue = Cookies.get("access_token")
 
     if (cookieValue) {
-      console.log('access_token in cookie')
-      console.log(username)
+      // console.log('access_token in cookie')
+      // console.log(username)
       if (!username){
-        fetch('/api/me')
+        fetch('/api/me',{
+            headers: {"Authorization": `Bearer ${cookieValue}`}
+          })
           .then(data => data.json())
           .then(data => {
             setUsername(data.display_name);

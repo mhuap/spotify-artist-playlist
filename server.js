@@ -28,7 +28,7 @@ var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback/'
 const scopes = ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private']
 
 var app = express();
-app.use(cors());
+app.use(cors({credentials: true}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended:true }));
 app.use(cookieParser());
@@ -84,9 +84,11 @@ app.get('/callback', async function(req, res) {
 app.get('/api/me', (req, res) => {
   console.log('GET /api/me');
 
+  const access_token = req.headers['authorization'].split(' ')[1]
   const spotifyApi = new SpotifyWebApi({
-    accessToken: req.cookies["access_token"]
+    accessToken: access_token
   });
+
   spotifyApi
     .getMe()
     .then(data => {
@@ -103,11 +105,10 @@ app.get('/api/search-artist', (req, res) => {
 
   const artist = req.query.artist;
 
+  const access_token = req.headers['authorization'].split(' ')[1]
   const spotifyApi = new SpotifyWebApi({
-    accessToken: req.cookies["access_token"]
+    accessToken: access_token
   });
-
-  console.log(req.cookies)
 
   spotifyApi
     .searchArtists(artist)
@@ -131,8 +132,9 @@ app.get('/api/albums', (req, res) => {
   const artist_id = req.query.artist_id;
   let filtered = [];
   // .then(data => res.json(data.body))
+  const access_token = req.headers['authorization'].split(' ')[1]
   const spotifyApi = new SpotifyWebApi({
-    accessToken: req.cookies["access_token"]
+    accessToken: access_token
   });
 
   spotifyApi
@@ -168,8 +170,9 @@ app.post('/api/create', (req,res) => {
   let playlist_id;
   let uris;
 
+  const access_token = req.headers['authorization'].split(' ')[1]
   const spotifyApi = new SpotifyWebApi({
-    accessToken: req.cookies["access_token"]
+    accessToken: access_token
   });
 
   spotifyApi
