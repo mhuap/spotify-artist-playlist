@@ -23,7 +23,6 @@ function Search({ username, proxy }) {
     )
       .then(data => data.json())
       .then(data => {
-        console.log(data)
         setArtists(data)
       });
   }
@@ -34,7 +33,7 @@ function Search({ username, proxy }) {
 
   let list = null;
   if (artists.length > 0) {
-    list = artists.map(a => <li key={a.id}><Link to={'/artist/' + a.id}><img src={a.image}/>{a.name}</Link></li>)
+    list = artists.map(a => <li key={a.id}><Link to={'/artist/' + a.id}><img src={a.image} alt={a.name}/>{a.name}</Link></li>)
   }
   return (
     <div id='search'>

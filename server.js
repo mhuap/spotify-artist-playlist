@@ -138,7 +138,7 @@ app.get('/api/albums', (req, res) => {
   });
 
   spotifyApi
-    .getArtistAlbums(artist_id, {include_groups: 'album,compilation', limit: 50, market: 'CA', })
+    .getArtistAlbums(artist_id, {include_groups: 'album,compilation', limit: 50, market: 'CA' })
     .then(data => {
       const items = data.body.items.map(x => {
         return {
@@ -166,7 +166,6 @@ app.post('/api/create', (req,res) => {
 
   const artist = req.body.artist;
   const albums = req.body.albums; // ['5U4W9E5WsYb2jUQWePT8Xm', '3KyVcddATClQKIdtaap4bV']
-  console.log(albums)
   let playlist_id;
   let uris;
 
