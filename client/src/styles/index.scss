@@ -57,6 +57,7 @@ p {
 header {
   background: black;
   height: 100px;
+  min-height: 100px;
   display: flex;
   align-items: flex-end;
   padding-bottom: 8px;

@@ -130,7 +130,9 @@ app.get('/api/albums', (req, res) => {
   console.log('GET /api/albums');
 
   const artist_id = req.query.artist_id;
+  const offset = req.query.offset;
   let filtered = [];
+  let next = true;
   // .then(data => res.json(data.body))
   const access_token = req.headers['authorization'].split(' ')[1]
   const spotifyApi = new SpotifyWebApi({
@@ -138,9 +140,14 @@ app.get('/api/albums', (req, res) => {
   });
 
   spotifyApi
-    .getArtistAlbums(artist_id, {include_groups: 'album,compilation', limit: 50, market: 'CA' })
+    .getArtistAlbums(artist_id, {include_groups: 'album,compilation', limit: 20, market: 'CA', offset: offset })
     .then(data => {
+      if (data.body.next == null){
+        next = false;
+      }
+
       const items = data.body.items.map(x => {
+
         return {
           name: x.name,
           id: x.id,
@@ -153,10 +160,11 @@ app.get('/api/albums', (req, res) => {
           (a.name === album.name)
         )
       )
+
       return spotifyApi.getArtist(artist_id)
     })
     .then(data => {
-      res.json({name: data.body.name, albums: filtered})
+      res.json({name: data.body.name, albums: filtered, next: next})
     })
     .catch(err => console.error(err))
 })
@@ -186,6 +194,13 @@ app.post('/api/create', (req,res) => {
         spotifyApi.addTracksToPlaylist(playlist_id, batch);
       }
     })
+    .then(data => spotifyApi.getPlaylist(playlist_id))
+    .then(playlist => {
+        res.json({
+          href: playlist.body.external_urls.spotify
+        })
+      })
+    .catch(err => console.error(err))
 })
 
 app.listen(process.env.PORT || port, () => {

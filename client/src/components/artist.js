@@ -4,7 +4,8 @@ import {
   useParams
 } from "react-router-dom";
 import Cookies from 'js-cookie';
-import Album from './album'
+import InfiniteScroll from "react-infinite-scroll-component";
+import Album from './album';
 
 const querystring = require('querystring');
 
@@ -14,25 +15,31 @@ function Artist({ proxy }) {
   const [albums, setAlbums] = useState([]);
   const [selectedAlbums, setSelectedAlbums] = useState([]);
   const [playlistCreated, setPlaylistCreated] = useState(false);
+  const [href, setHref] = useState('')
+  const [hasMore, setHasMore] = useState(true)
+  const [offset, setOffset] = useState(0)
 
   let { id } = useParams();
-
 
   useEffect(() => {
     const cookieValue = Cookies.get("access_token");
 
-    fetch(proxy + '/api/albums/?' + querystring.stringify({artist_id: id}),
+    fetch(proxy + '/api/albums/?' + querystring.stringify({artist_id: id, offset: offset}),
       {
         headers: {"Authorization": `Bearer ${cookieValue}`}
       }
     )
       .then(data => data.json())
       .then(data => {
-        setName(data.name);
-        setAlbums(data.albums);
-        setSelectedAlbums(data.albums);
+        if (name === ''){
+          setName(data.name);
+        }
+        const newAlbums = data.albums
+        setAlbums(albums.concat(newAlbums));
+        setSelectedAlbums(selectedAlbums.concat(newAlbums));
+        setHasMore(data.next)
       });
-  }, [id, proxy])
+  }, [id, proxy, offset])
 
   // useEffect(() => console.log(selectedAlbums), [selectedAlbums])
 
@@ -75,10 +82,19 @@ function Artist({ proxy }) {
         albums: selectedAlbums.map(x => x.id)
       })
     })
-    setPlaylistCreated(true);
+      .then(data => data.json())
+      .then(data => {
+        setPlaylistCreated(true);
+        setHref(data.href)
+      })
+
   }
 
-  let list = <p>Loading...</p>
+  const fetchMoreAlbums = () => {
+    setOffset(offset + 20)
+  }
+
+  let list = null;
   if (albums.length > 0) {
     list = albums.map(a =>
       <Album key={a.id}
@@ -87,20 +103,37 @@ function Artist({ proxy }) {
         albumId={a.id}
         isSelected={isAlbumSelected(a.id)}
         onClickAlbum={onClickAlbum}
-        />)
+      />)
   }
 
   let content;
   if (playlistCreated){
-    content = <div id='confirmation' className='content'>
-      <h1>playlist created</h1>
-      <Link className='text-caps button total-center' to='/'>Yay</Link>
-    </div>
+    // confirmation
+    content = <>
+      <div id='confirmation' className='content album-list'>
+        <h2>Playlist created</h2>
+        <a href={href} target="_blank">{href}</a>
+      </div>
+      <div className='content artist-button'ß>
+        <Link className='text-caps button total-center' to='/'>Yay</Link>
+      </div>
+    </>
   } else {
-    content = <div className='content'>
-      {list}
-      <button onClick={createPlaylist}>Create playlist</button>
+    // album list
+    content = <><div className='content album-list'>
+      <InfiniteScroll
+        dataLength={albums.length}
+        next={fetchMoreAlbums}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+      >
+        {list}
+      </InfiniteScroll>
     </div>
+      <div className='content artist-button'>
+        <button onClick={createPlaylist}>Create playlist</button>
+      </div>
+      </>
   }
 
 
@@ -109,6 +142,7 @@ function Artist({ proxy }) {
       <div className='content text-caps'>{name}</div>
     </header>
     {content}
+
   </div>)
 }
 
