@@ -5,7 +5,7 @@ function Album({ name, albumId, isSelected, onClickAlbum, image }) {
 
   return(<div id='album'>
     <label>
-      <span>
+      <span className={isSelected ? '' : 'unselectedAlbum'}>
         <input type='checkbox' checked={isSelected} value={albumId} onChange={onClickAlbum}/>
         {name}
       </span>

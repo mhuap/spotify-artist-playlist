@@ -6,6 +6,7 @@ import {
 import Cookies from 'js-cookie';
 import InfiniteScroll from "react-infinite-scroll-component";
 import Album from './album';
+import spotifyLogo from '../images/Spotify_Logo_RGB_Green.png'
 
 const querystring = require('querystring');
 
@@ -18,6 +19,7 @@ function Artist({ proxy }) {
   const [href, setHref] = useState('')
   const [hasMore, setHasMore] = useState(true)
   const [offset, setOffset] = useState(0)
+  const [selectAll, setSelectAll] = useState(true);
 
   let { id } = useParams();
 
@@ -36,7 +38,9 @@ function Artist({ proxy }) {
         }
         const newAlbums = data.albums
         setAlbums(albums.concat(newAlbums));
-        setSelectedAlbums(selectedAlbums.concat(newAlbums));
+        if (selectAll){
+          setSelectedAlbums(selectedAlbums.concat(newAlbums));
+        }
         setHasMore(data.next)
       });
   }, [id, proxy, offset])
@@ -65,6 +69,17 @@ function Artist({ proxy }) {
       unselect(albumId);
     } else {
       select(albumId);
+    }
+  }
+
+  const onClickMasterCheckbox = () => {
+    if (selectAll){
+      // deselect
+      setSelectAll(false);
+      setSelectedAlbums([]);
+    } else {
+      setSelectAll(true);
+      setSelectedAlbums(albums)
     }
   }
 
@@ -112,34 +127,42 @@ function Artist({ proxy }) {
     content = <>
       <div id='confirmation' className='content album-list'>
         <h2>Playlist created</h2>
-        <a href={href} target="_blank">{href}</a>
       </div>
-      <div className='content artist-button'ß>
-        <Link className='text-caps button total-center' to='/'>Yay</Link>
+      <div className='content spotify-button'>
+        <a href={href} target="_blank" className='text-caps button total-center'>Listen on Spotify</a>
+      </div>
+      <div className='content artist-button'>
+        <Link className='text-caps button total-center' to='/'>Make another playlist</Link>
       </div>
     </>
   } else {
     // album list
-    content = <><div className='content album-list'>
-      <InfiniteScroll
-        dataLength={albums.length}
-        next={fetchMoreAlbums}
-        hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-      >
-        {list}
-      </InfiniteScroll>
-    </div>
+    content = <>
+      <div className='content master-checkbox'>
+        <input type='checkbox' onChange={onClickMasterCheckbox} defaultChecked/>
+        <label>select/unselect all</label>
+      </div>
+      <div className='content album-list'>
+        <InfiniteScroll
+          dataLength={albums.length}
+          next={fetchMoreAlbums}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
+        >
+          {list}
+        </InfiniteScroll>
+      </div>
       <div className='content artist-button'>
         <button onClick={createPlaylist}>Create playlist</button>
       </div>
-      </>
+    </>
   }
 
 
   return(<div id='artist'>
     <header>
-      <div className='content text-caps'>{name}</div>
+      <img className='spotifyLogo' src={spotifyLogo} alt='Spotify logo'/>
+      <div className='text-caps'>{name}</div>
     </header>
     {content}
 
