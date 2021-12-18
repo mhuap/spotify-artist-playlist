@@ -164,6 +164,7 @@ app.get('/api/albums', (req, res) => {
       return spotifyApi.getArtist(artist_id)
     })
     .then(data => {
+      // console.log(next)
       res.json({name: data.body.name, albums: filtered, next: next})
     })
     .catch(err => console.error(err))
@@ -190,7 +191,7 @@ app.post('/api/create', (req,res) => {
     .then(tracks => uris = tracks.map(t => t.uri))
     .then(data => {
       while (uris.length > 0) {
-        const batch = uris.splice(0, 100);
+        const batch = uris.splice(0, 49);
         spotifyApi.addTracksToPlaylist(playlist_id, batch);
       }
     })
@@ -200,7 +201,7 @@ app.post('/api/create', (req,res) => {
           href: playlist.body.external_urls.spotify
         })
       })
-    .catch(err => console.error(err))
+    .catch(err => {console.error(err); console.log(access_token)})
 })
 
 app.listen(process.env.PORT || port, () => {

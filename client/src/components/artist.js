@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
   Link,
-  useParams
+  useParams,
+  useHistory
 } from "react-router-dom";
 import Cookies from 'js-cookie';
-import InfiniteScroll from "react-infinite-scroll-component";
 import Album from './album';
-import spotifyLogo from '../images/Spotify_Logo_RGB_Green.png'
 
 const querystring = require('querystring');
 
@@ -16,36 +15,47 @@ function Artist({ proxy }) {
   const [albums, setAlbums] = useState([]);
   const [selectedAlbums, setSelectedAlbums] = useState([]);
   const [playlistCreated, setPlaylistCreated] = useState(false);
-  const [href, setHref] = useState('')
-  const [hasMore, setHasMore] = useState(true)
-  const [offset, setOffset] = useState(0)
+  const [href, setHref] = useState('');
+  const [loading, setLoading] = useState(true);
   const [selectAll, setSelectAll] = useState(true);
 
   let { id } = useParams();
+  let history = useHistory();
 
   useEffect(() => {
     const cookieValue = Cookies.get("access_token");
 
-    fetch(proxy + '/api/albums/?' + querystring.stringify({artist_id: id, offset: offset}),
-      {
-        headers: {"Authorization": `Bearer ${cookieValue}`}
-      }
-    )
-      .then(data => data.json())
-      .then(data => {
+    async function fetchData() {
+      let offset = 0;
+      let hasMore = true;
+
+      while (hasMore) {
+        console.log("fetch");
+        let data = await fetch(proxy + '/api/albums/?' + querystring.stringify({artist_id: id, offset: offset}),
+          {
+            headers: {"Authorization": `Bearer ${cookieValue}`}
+          }
+        );
+        data = await data.json();
+
         if (name === ''){
           setName(data.name);
         }
         const newAlbums = data.albums
-        setAlbums(albums.concat(newAlbums));
+        setAlbums(prevAlbums => [...prevAlbums, ...newAlbums]);
         if (selectAll){
-          setSelectedAlbums(selectedAlbums.concat(newAlbums));
+          setSelectedAlbums(prevSelected => [...prevSelected, ...newAlbums]);
         }
-        setHasMore(data.next)
-      });
-  }, [id, proxy, offset])
+        hasMore = data.next;
+        offset = offset + 20;
+      }
 
-  // useEffect(() => console.log(selectedAlbums), [selectedAlbums])
+      setLoading(false)
+    }
+
+    fetchData();
+
+  }, [id, proxy]);
 
   const select = id => {
     const albumObject = albums.filter(x => x.id === id)[0];
@@ -105,11 +115,10 @@ function Artist({ proxy }) {
 
   }
 
-  const fetchMoreAlbums = () => {
-    setOffset(offset + 20)
+  let list = <h4>No albums found</h4>;
+  if (loading) {
+    list = <h4>Loading...</h4>
   }
-
-  let list = null;
   if (albums.length > 0) {
     list = albums.map(a =>
       <Album key={a.id}
@@ -132,7 +141,7 @@ function Artist({ proxy }) {
         <a href={href} target="_blank" className='text-caps button total-center'>Listen on Spotify</a>
       </div>
       <div className='content artist-button'>
-        <Link className='text-caps button total-center' to='/'>Make another playlist</Link>
+        <Link className='text-caps button total-center' to='/'>Restart</Link>
       </div>
     </>
   } else {
@@ -143,14 +152,7 @@ function Artist({ proxy }) {
         <label>select/unselect all</label>
       </div>
       <div className='content album-list'>
-        <InfiniteScroll
-          dataLength={albums.length}
-          next={fetchMoreAlbums}
-          hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-        >
-          {list}
-        </InfiniteScroll>
+        {list}
       </div>
       <div className='content artist-button'>
         <button onClick={createPlaylist}>Create playlist</button>
@@ -161,12 +163,20 @@ function Artist({ proxy }) {
 
   return(<div id='artist'>
     <header>
-      <img className='spotifyLogo' src={spotifyLogo} alt='Spotify logo'/>
+      <button className='back-btn' onClick={() => history.goBack()}>←</button>
       <div className='text-caps'>{name}</div>
     </header>
     {content}
 
   </div>)
 }
+// <InfiniteScroll
+//   dataLength={albums.length}
+//   next={fetchMoreAlbums}
+//   hasMore={hasMore}
+//   loader={<h4>Loading...</h4>}
+// >
+//
+// </InfiniteScroll>
 
 export default Artist;

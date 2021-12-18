@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Link
+  Link,
+  useHistory
 } from "react-router-dom";
 import Cookies from 'js-cookie';
 import '../styles/Search.scss';
+import filler from '../images/Portrait_Placeholder.png';
+
 
 const querystring = require('querystring');
 
@@ -11,29 +14,42 @@ function Search({ username, proxy }) {
   const [artists, setArtists] = useState([])
   const [artistInput, setArtistInput] = useState('')
 
+  let history = useHistory();
+
   const searchArtist = (e) => {
     e.preventDefault();
     const cookieValue = Cookies.get("access_token");
     console.log(cookieValue)
+    if (cookieValue) {
+      fetch(proxy + '/api/search-artist/?' + querystring.stringify({artist: artistInput}),
+        {
+          headers: {"Authorization": `Bearer ${cookieValue}`}
+        }
+      )
+        .then(data => data.json())
+        .then(data => {
+          setArtists(data)
+        });
+    } else {
+      console.log("no cookie. sadge.");
+      history.go(0);
+    }
 
-    fetch(proxy + '/api/search-artist/?' + querystring.stringify({artist: artistInput}),
-      {
-        headers: {"Authorization": `Bearer ${cookieValue}`}
-      }
-    )
-      .then(data => data.json())
-      .then(data => {
-        setArtists(data)
-      });
+
   }
 
   const handleArtistInputChange = (e) => {
     setArtistInput(e.target.value);
   }
 
+
   let list = null;
   if (artists.length > 0) {
-    list = artists.map(a => <li key={a.id}><Link to={'/artist/' + a.id}><img src={a.image} alt={a.name}/>{a.name}</Link></li>)
+    list = artists.map(a => <li key={a.id}>
+      <Link to={'/artist/' + a.id}>
+        <img src={a.image ? a.image : filler} alt={a.name}/>
+        {a.name}
+      </Link></li>)
   }
   return (
     <div id='search'>

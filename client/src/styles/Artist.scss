@@ -5,20 +5,23 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding-top: 116px;
+  padding-top: 132px;
 
   header {
-    position: fixed;
-    top: 0;
-    max-width: 450px;
-    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
+    position: fixed;
+    padding-left: 16px;
 
-    > div {
-      margin-left: 16px;
+    button {
+      width: 32px;
+      height: 32px;
+      background: rgba(0,0,0,0.3);
+      font-size: 20px;
+      padding: 0;
+      cursor: pointer;
     }
 
   }
@@ -30,29 +33,28 @@
 }
 
 .artist-button {
-  margin-bottom: 16px;
   position: fixed;
-  bottom: 16px;
+  bottom: 32px;
   max-width: 418px;
-  width: 100%;
+  width: calc(100% - 32px);
 
   button {
     cursor: pointer;
-    box-shadow: black 0px 6px 20px 4px;
+    box-shadow: rgba(0,0,0,0.5) 0px 6px 20px 4px;
   }
 }
 
 .master-checkbox {
   color: $color-text-grey;
   margin-top: 16px;
-  
+
   input {
     margin-left: 12px;
     margin-right: 16px;
   }
 }
 
-#album {
+.album {
 
   label {
     display: flex;
@@ -80,6 +82,7 @@
   img {
     height: 80px;
     width: 80px;
+    margin-left: 8px;
   }
 
   .unselectedAlbum {
@@ -94,13 +97,13 @@
 
 }
 
-.spotifyLogo {
-  width: 80px;
-  margin-right: 16px;
-  margin-left: 8px;
-  display: block;
-  align-self: flex-end;
-}
+// .spotifyLogo {
+//   width: 80px;
+//   margin-right: 16px;
+//   margin-left: 8px;
+//   display: block;
+//   align-self: flex-end;
+// }
 
 .spotify-button {
   margin-bottom: 16px;

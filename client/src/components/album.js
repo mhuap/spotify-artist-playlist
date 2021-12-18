@@ -3,7 +3,7 @@ import React from 'react';
 import '../styles/Artist.scss';
 function Album({ name, albumId, isSelected, onClickAlbum, image }) {
 
-  return(<div id='album'>
+  return(<div className='album'>
     <label>
       <span className={isSelected ? '' : 'unselectedAlbum'}>
         <input type='checkbox' checked={isSelected} value={albumId} onChange={onClickAlbum}/>
