@@ -22,8 +22,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 var client_id = process.env.CLIENT_ID; // Your client id
 var client_secret = process.env.CLIENT_SECRET; // Your secret
-// var redirect_uri = 'http://localhost:5000/callback/';
-var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback/'
+var redirect_uri = 'http://localhost:5000/callback/';
+// var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback/'
 
 const scopes = ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private']
 
@@ -165,7 +165,12 @@ app.get('/api/albums', (req, res) => {
     })
     .then(data => {
       // console.log(next)
-      res.json({name: data.body.name, albums: filtered, next: next})
+      res.json({
+        name: data.body.name,
+        image: data.body.images.length === 0 ? '' : data.body.images[0].url,
+        albums: filtered,
+        next: next
+      })
     })
     .catch(err => console.error(err))
 })
@@ -177,7 +182,6 @@ app.post('/api/create', (req,res) => {
   const albums = req.body.albums; // ['5U4W9E5WsYb2jUQWePT8Xm', '3KyVcddATClQKIdtaap4bV']
   let playlist_id;
   let uris;
-
   const access_token = req.headers['authorization'].split(' ')[1]
   const spotifyApi = new SpotifyWebApi({
     accessToken: access_token
@@ -186,12 +190,25 @@ app.post('/api/create', (req,res) => {
   spotifyApi
     .createPlaylist(artist + ' Discography')
     .then(data => playlist_id = data.body.id)
-    .then(id => spotifyApi.getAlbums(albums))
-    .then(data => data.body.albums.map(a => a.tracks.items).flat())
+    .then(id => {
+
+      async function getAllAlbums(){
+        let allAlbums = [];
+        while (albums.length > 0){
+          const batch = albums.splice(0, 20);
+          const getAlbums = await spotifyApi.getAlbums(batch);
+          allAlbums.concat(getAlbums.body.albums);
+        }
+        return allAlbums;
+      }
+
+      return getAllAlbums()
+      })
+    .then(as => as.map(a => a.tracks.items).flat())
     .then(tracks => uris = tracks.map(t => t.uri))
     .then(data => {
       while (uris.length > 0) {
-        const batch = uris.splice(0, 49);
+        const batch = uris.splice(0, 50);
         spotifyApi.addTracksToPlaylist(playlist_id, batch);
       }
     })

@@ -12,6 +12,7 @@ const querystring = require('querystring');
 
 function Artist({ proxy }) {
   const [name, setName] = useState('');
+  const [bgImage, setBgImage] = useState('');
   const [albums, setAlbums] = useState([]);
   const [selectedAlbums, setSelectedAlbums] = useState([]);
   const [playlistCreated, setPlaylistCreated] = useState(false);
@@ -40,6 +41,9 @@ function Artist({ proxy }) {
 
         if (name === ''){
           setName(data.name);
+        }
+        if (bgImage === ''){
+          setBgImage(data.image);
         }
         const newAlbums = data.albums
         setAlbums(prevAlbums => [...prevAlbums, ...newAlbums]);
@@ -160,12 +164,19 @@ function Artist({ proxy }) {
     </>
   }
 
-
+  const bgString = "linear-gradient(transparent,#121212), url(" + bgImage + ")";
+  console.log(bgString);
   return(<div id='artist'>
     <header>
       <button className='back-btn' onClick={() => history.goBack()}>←</button>
       <div className='text-caps'>{name}</div>
+      <div className='artist-image' style={{
+        background: bgString
+        }}>
+      </div>
     </header>
+
+
     {content}
 
   </div>)
