@@ -22,8 +22,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 var client_id = process.env.CLIENT_ID; // Your client id
 var client_secret = process.env.CLIENT_SECRET; // Your secret
-var redirect_uri = 'http://localhost:5000/callback/';
-// var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback/'
+// var redirect_uri = 'http://localhost:5000/callback/';
+var redirect_uri = 'https://spotify-artist-playlist.herokuapp.com/callback/'
 
 const scopes = ['user-read-private', 'user-read-email', 'playlist-modify-public', 'playlist-modify-private']
 
@@ -190,21 +190,18 @@ app.post('/api/create', (req,res) => {
   spotifyApi
     .createPlaylist(artist + ' Discography')
     .then(data => playlist_id = data.body.id)
-    .then(id => {
+    .then(async id => {
 
-      async function getAllAlbums(){
-        let allAlbums = [];
-        while (albums.length > 0){
-          const batch = albums.splice(0, 20);
-          const getAlbums = await spotifyApi.getAlbums(batch);
-          allAlbums.concat(getAlbums.body.albums);
-        }
-        return allAlbums;
+      let allAlbums = [];
+      while (albums.length > 0){
+        console.log("while loop");
+        const batch = albums.splice(0, 20);
+        const getAlbums = await spotifyApi.getAlbums(batch);
+        allAlbums = allAlbums.concat(getAlbums.body.albums);
       }
-
-      return getAllAlbums()
-      })
-    .then(as => as.map(a => a.tracks.items).flat())
+      return allAlbums;
+    })
+    .then(all => all.map(a => a.tracks.items).flat())
     .then(tracks => uris = tracks.map(t => t.uri))
     .then(data => {
       while (uris.length > 0) {

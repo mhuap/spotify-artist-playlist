@@ -165,7 +165,6 @@ function Artist({ proxy }) {
   }
 
   const bgString = "linear-gradient(transparent,#121212), url(" + bgImage + ")";
-  console.log(bgString);
   return(<div id='artist'>
     <header>
       <button className='back-btn' onClick={() => history.goBack()}>←</button>
