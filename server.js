@@ -191,13 +191,15 @@ app.post('/api/create', (req,res) => {
     .createPlaylist(artist + ' Discography')
     .then(data => playlist_id = data.body.id)
     .then(async id => {
-
       let allAlbums = [];
       while (albums.length > 0){
-        console.log("while loop");
         const batch = albums.splice(0, 20);
-        const getAlbums = await spotifyApi.getAlbums(batch);
-        allAlbums = allAlbums.concat(getAlbums.body.albums);
+        try {
+          const getAlbums = await spotifyApi.getAlbums(batch);
+          allAlbums = allAlbums.concat(getAlbums.body.albums);
+        } catch(err) {
+          console.error("Error getting album information");
+        }
       }
       return allAlbums;
     })
@@ -206,7 +208,12 @@ app.post('/api/create', (req,res) => {
     .then(data => {
       while (uris.length > 0) {
         const batch = uris.splice(0, 50);
-        spotifyApi.addTracksToPlaylist(playlist_id, batch);
+        try {
+          spotifyApi.addTracksToPlaylist(playlist_id, batch);
+        } catch(err) {
+          console.error("Error adding tracks to playlist");
+        }
+
       }
     })
     .then(data => spotifyApi.getPlaylist(playlist_id))
@@ -215,7 +222,10 @@ app.post('/api/create', (req,res) => {
           href: playlist.body.external_urls.spotify
         })
       })
-    .catch(err => {console.error(err); console.log(access_token)})
+    .catch(err => {
+      console.error(err);
+      console.log(access_token);
+    })
 })
 
 app.listen(process.env.PORT || port, () => {

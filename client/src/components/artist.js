@@ -135,6 +135,7 @@ function Artist({ proxy }) {
   }
 
   let content;
+  // let onClickBack;
   if (playlistCreated){
     // confirmation
     content = <>
@@ -148,6 +149,7 @@ function Artist({ proxy }) {
         <Link className='text-caps button total-center' to='/'>Restart</Link>
       </div>
     </>
+    // onClickBack = () => history.go(0);
   } else {
     // album list
     content = <>
@@ -162,12 +164,13 @@ function Artist({ proxy }) {
         <button onClick={createPlaylist}>Create playlist</button>
       </div>
     </>
+    // onClickBack = () => history.goBack()
   }
 
   const bgString = "linear-gradient(transparent,#121212), url(" + bgImage + ")";
   return(<div id='artist'>
     <header>
-      <button className='back-btn' onClick={() => history.goBack()}>←</button>
+      <button className='back-btn' onClick={() => setPlaylistCreated(false)}>←</button>
       <div className='text-caps'>{name}</div>
       <div className='artist-image' style={{
         background: bgString
