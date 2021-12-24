@@ -73,12 +73,42 @@
 }
 
 .master-checkbox {
-  color: $color-text-grey;
   margin-top: 16px;
+
+  .checkbox {
+    float: left;
+    width: 12px;
+    margin-left: 8px;
+  }
 
   input {
     margin-left: 12px;
     margin-right: 16px;
+    display: none;
+  }
+}
+
+.checkbox {
+  background-color: $color-green;
+  padding: 6px;
+  line-height: 0;
+  border-radius: 6px;
+  font-size: 12px;
+  color: $color-card;
+  border: none;
+  margin-right: 8px;
+  margin-top: -2px;
+  height: 12px;
+}
+
+.unselectedAlbum {
+  color: $color-text-grey;
+
+  .checkbox {
+    background-color: transparent;
+    border: 2px solid $color-text-grey;
+    width: 8px;
+    height: 8px;
   }
 }
 
@@ -104,17 +134,13 @@
   }
 
   input {
-    margin-right: 16px;
+    display: none;
   }
 
   img {
     height: 80px;
     width: 80px;
     margin-left: 8px;
-  }
-
-  .unselectedAlbum {
-    color: $color-text-grey;
   }
 
   // .link {

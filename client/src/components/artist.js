@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Cookies from 'js-cookie';
 import Album from './album';
+import Checkbox from './checkbox';
 import spotifyLogo from '../images/Spotify_Icon_RGB_White.png';
 
 const querystring = require('querystring');
@@ -167,9 +168,12 @@ function Artist({ proxy }) {
           Listen on Spotify
         </a>
       </div>
-      <div className='content master-checkbox'>
-        <input type='checkbox' onChange={onClickMasterCheckbox} defaultChecked/>
-        <label>select/unselect all</label>
+      <div className={'content master-checkbox' + (selectAll ? '' : ' unselectedAlbum')}>
+        <label>
+          <input type='checkbox' onChange={onClickMasterCheckbox} defaultChecked/>
+          <Checkbox checked={selectAll} />
+          {selectedAlbums.length} selected
+        </label>
       </div>
       <div className='content album-list'>
         {list}
