@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Cookies from 'js-cookie';
 import Album from './album';
+import spotifyLogo from '../images/Spotify_Icon_RGB_White.png';
 
 const querystring = require('querystring');
 
@@ -13,6 +14,7 @@ const querystring = require('querystring');
 function Artist({ proxy }) {
   const [name, setName] = useState('');
   const [bgImage, setBgImage] = useState('');
+  const [url, setUrl] = useState('');
   const [albums, setAlbums] = useState([]);
   const [selectedAlbums, setSelectedAlbums] = useState([]);
   const [playlistCreated, setPlaylistCreated] = useState(false);
@@ -45,7 +47,10 @@ function Artist({ proxy }) {
         if (bgImage === ''){
           setBgImage(data.image);
         }
-        const newAlbums = data.albums
+        if (url === ''){
+          setUrl(data.url);
+        }
+        const newAlbums = data.albums;
         setAlbums(prevAlbums => [...prevAlbums, ...newAlbums]);
         if (selectAll){
           setSelectedAlbums(prevSelected => [...prevSelected, ...newAlbums]);
@@ -178,6 +183,12 @@ function Artist({ proxy }) {
       </div>
     </header>
 
+    <div className="content">
+      <a className="text-caps button total-center" target="_blank" href={url}>
+        <img src={spotifyLogo} alt="spotify logo icon"/>
+        Listen on Spotify
+      </a>
+    </div>
 
     {content}
 

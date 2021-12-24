@@ -1,4 +1,5 @@
 import React from 'react';
+// import spotifyLogo from '../images/Spotify_Icon_RGB_White.png';
 
 import '../styles/Artist.scss';
 function Album({ name, albumId, isSelected, onClickAlbum, image }) {
