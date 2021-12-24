@@ -32,7 +32,7 @@
     flex-grow: 1;
   }
 
-  .button {
+  .button.artist-link {
     margin: 8px 0;
     border: 2px solid $color-text-grey;
     background: $color-card;
@@ -162,6 +162,12 @@
 
   a.button {
     background: none;
-    border: 1px $color-green solid;
+    border: 2px $color-green solid;
+  }
+
+  img {
+    height: 24px;
+    width: 24px;
+    margin-right: 8px;
   }
 }

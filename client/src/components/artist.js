@@ -148,7 +148,10 @@ function Artist({ proxy }) {
         <h2>Playlist created</h2>
       </div>
       <div className='content spotify-button'>
-        <a href={href} target="_blank" className='text-caps button total-center'>Listen on Spotify</a>
+        <a href={href} target="_blank" className='text-caps button total-center'>
+          <img src={spotifyLogo} alt="spotify logo icon"/>
+          Listen on Spotify
+        </a>
       </div>
       <div className='content artist-button'>
         <Link className='text-caps button total-center' to='/'>Restart</Link>
@@ -158,6 +161,12 @@ function Artist({ proxy }) {
   } else {
     // album list
     content = <>
+      <div className="content">
+        <a className="text-caps button total-center artist-link" target="_blank" href={url}>
+          <img src={spotifyLogo} alt="spotify logo icon"/>
+          Listen on Spotify
+        </a>
+      </div>
       <div className='content master-checkbox'>
         <input type='checkbox' onChange={onClickMasterCheckbox} defaultChecked/>
         <label>select/unselect all</label>
@@ -182,13 +191,6 @@ function Artist({ proxy }) {
         }}>
       </div>
     </header>
-
-    <div className="content">
-      <a className="text-caps button total-center" target="_blank" href={url}>
-        <img src={spotifyLogo} alt="spotify logo icon"/>
-        Listen on Spotify
-      </a>
-    </div>
 
     {content}
 
