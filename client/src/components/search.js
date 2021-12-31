@@ -42,6 +42,13 @@ function Search({ username, proxy }) {
     setArtistInput(e.target.value);
   }
 
+  const handleLogout = (e) => {
+    e.preventDefault();
+
+    Cookies.remove("access_token");
+    history.go(0);
+  }
+
 
   let list = null;
   if (artists.length > 0) {
@@ -55,6 +62,7 @@ function Search({ username, proxy }) {
     <div id='search'>
       <header>
         <div className='content text-caps'>Welcome {username}</div>
+        <div className='content logout' onClick={handleLogout}>Log out</div>
       </header>
       <div className='content'>
         <form action='#' onSubmit={searchArtist}>

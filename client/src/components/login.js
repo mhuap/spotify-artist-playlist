@@ -10,7 +10,6 @@ function Login({ proxy }) {
     <div className='content'>
       <div id='login-title'>
         <h1>Discograph</h1>
-        <p className='text-caps no-margin'>For Spotify</p>
       </div>
 
       <p className='text-grey'>

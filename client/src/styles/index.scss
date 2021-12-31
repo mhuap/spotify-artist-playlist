@@ -66,6 +66,7 @@ header {
   align-items: flex-end;
   padding: 16px 0;
   margin-bottom: 8px;
+  position: relative;
 }
 
 #root {
@@ -107,4 +108,14 @@ header {
 
 .no-margin {
   margin: 0;
+}
+
+.logout {
+  position: absolute;
+  top: 16px;
+  right: 0;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: white;
+  letter-spacing: 1px;
 }

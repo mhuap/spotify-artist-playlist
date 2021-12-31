@@ -34,11 +34,11 @@
 
   .button.artist-link {
     margin: 8px 0;
-    border: 2px solid $color-text-grey;
-    background: $color-card;
+    border: 2px solid $color-card-light;
+    background: $color-card-light;
 
     &:hover {
-      background: $color-card-light;
+      background: $color-card;
     }
 
     img {
